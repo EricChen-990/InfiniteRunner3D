@@ -6,14 +6,16 @@ using UnityEngine;
 public class Player : MonoBehaviour{
     private Rigidbody rb;
     private Vector3 speed;
-    private float xSpeed = 15f; //前後
-    private float zSpeed = 8f;  //左右
+    public float xSpeed = 15f; //前後
+    public float zSpeed = 8f;  //左右
     private float accelerated = 20f;
     private float decelerated = 10f;
+    private bool isDead = false;
 
     private void Awake(){
         rb = GetComponent<Rigidbody>();
         speed = new Vector3(xSpeed, 0f, 0f);
+        isDead = false;
     }
 
     private void FixedUpdate(){
@@ -25,7 +27,20 @@ public class Player : MonoBehaviour{
     }
 
     private void OnTriggerEnter(Collider other) {    
-        Debug.Log(1);
+        if(other.CompareTag("CollisionFree") || isDead){
+            return;
+        }else{
+            isDead = true;
+            rb.GetComponent<Collider>().isTrigger = false;
+            speed = Vector3.zero;
+            rb.GetComponent<Rigidbody>().isKinematic = false;
+            rb.GetComponent<Rigidbody>().useGravity = true;
+            GameObject tank = rb.transform.Find("TankFree_Yel").gameObject;
+            tank.GetComponent<Collider>().isTrigger = true;
+            rb.AddForce(new(0f, 15f, 0f), ForceMode.Impulse);
+            rb.AddTorque(new(45f, 45f, 45f), ForceMode.Impulse);
+        }
+        
     }
 
     // Update is called once per frame
@@ -82,4 +97,5 @@ public class Player : MonoBehaviour{
     private void MoveStraight(){
         speed = new Vector3(xSpeed, 0, 0);
     }
+    
 }

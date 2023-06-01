@@ -53,4 +53,19 @@ public class GameContorller : MonoBehaviour{
     private void FixedUpdate() {
         float x = player.transform.position.x;
     }
+
+    public void Recycle(GameObject gb){
+        gb.SetActive(false);
+        envPool.Add(gb);
+    }
+
+    public void Retrieve(){
+        int j = UnityEngine.Random.Range(0, envPool.Count);
+        GameObject gb = envPool[j];
+        envPool.RemoveAt(j);
+        gb.transform.position = startPos;
+        gb.SetActive(true);
+        startPos += envInterval;
+        //return gb;
+    }
 }
