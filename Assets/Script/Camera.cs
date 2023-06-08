@@ -13,7 +13,9 @@ public class Camera : MonoBehaviour{
     // Update is called once per frame
     void Update(){
         if(!hasPlayer){
+            
             player = UnityEngine.GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        
             if(player.gameObject == null){
                 return;
             }else{
